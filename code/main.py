@@ -22,7 +22,8 @@ def deploy_functionApp(template_path, parameters_file_path,resource_group):
         return app_create_json # may here return just the values required to be returned
     except Exception as ex:
         raise ActionDeploymentError(ex)
-        
+
+    
 def main():
     # # Loading input values
     # print("::debug::Loading input values")
@@ -62,7 +63,13 @@ def main():
     service_principal_id=azure_credentials.get("clientId", "")
     service_principal_password=azure_credentials.get("clientSecret", "")
     
-
+    command = ('az login --service-principal --username {APP_ID} --password {PASSWORD} --tenant {TENANT_ID}').format(
+            APP_ID=service_principal_id, PASSWORD=service_principal_password, TENANT_ID=tenant_id)
+    try:
+        app_create = subprocess.check_output(command, shell=True)
+        print(app_create)
+    except Exception as ex:
+        print(ex)
     print(deploy_functionApp(template_file_file_path ,template_params_file_path , resource_group))
     
 
