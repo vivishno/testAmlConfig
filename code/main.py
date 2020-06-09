@@ -11,7 +11,18 @@ from msrest.exceptions import AuthenticationError
 from json import JSONDecodeError
 from utils import AMLConfigurationException, ActionDeploymentError, AMLExperimentConfigurationException, required_parameters_provided, mask_parameter, convert_to_markdown, load_pipeline_yaml, load_runconfig_yaml, load_runconfig_python
 
-    
+
+def deploy_functionApp(template_path, parameters_file_path,resource_group):
+    try:
+        command = ('az group deployment create -g {resource_group} --template-file "{template_path}" --parameters "{parameters_file_path}" -o json').format(
+            template_path=template_path, parameters_file_path=parameters_file_path, resource_group=resource_group)
+        print(command)
+        app_create = subprocess.check_output(command, shell=True)
+        app_create_json = json.loads(app_create)
+        return app_create_json # may here return just the values required to be returned
+    except Exception as ex:
+        raise ActionDeploymentError(ex)
+        
 def main():
     # # Loading input values
     # print("::debug::Loading input values")
@@ -51,12 +62,7 @@ def main():
     service_principal_id=azure_credentials.get("clientId", "")
     service_principal_password=azure_credentials.get("clientSecret", "")
     
-    command =az login --service-principal --username "b4218dbd-afc4-4685-9592-86a5f02b1ed9" --password "YX!t=,}O:~Yr)JbhE-&MExn\"#.oz~9_V" --tenant "2d1aba9c-5938-402b-90b9-72a284a4bced"
-    try:
-        app_create = subprocess.check_output(command, shell=True)
-        print(app_create)
-    except Exception as ex:
-        print(ex)
+
     print(deploy_functionApp(template_file_file_path ,template_params_file_path , resource_group))
     
 
