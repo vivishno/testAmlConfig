@@ -1,24 +1,28 @@
-on: [push]
-
-name: AzureCLISampleForFile
-
-
+# Test Actions train a model on Azure Machine Learning
+name: aml-train-deploy-workflow 
+on:
+  push:
+    branches:
+      - master
+    # paths:
+    #   - 'code/*'
+    
+    
 jobs:
-  build-and-deploy:
+  train:
     runs-on: ubuntu-latest
     steps:
-    - name: Azure Login
-      uses: azure/login@v1
+    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - name: Check Out Repository
+      id: checkout_repository
+      uses: actions/checkout@v2
+        
+    # Connect or Create the Azure Machine Learning Workspace
+    - name: deploy all resources
+      id: aml_configure
+      uses: ./
       with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-    - name: Checkout
-      uses: actions/checkout@v1
-      
-
-    - name: Azure CLI script file
-      uses: azure/CLI@v1
-      with:
-        azcliversion: 2.6.0
-        inlineScript: |
-          echo "abcd"
+          azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
+          armtemplate_file: "deploy.json"
+          armtemplateparams_file: "deploy.params.json"
+          resource_group: "Test1"
