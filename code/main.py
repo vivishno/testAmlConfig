@@ -6,6 +6,13 @@ import subprocess
     
 def main():
     azure_credentials = os.environ.get("INPUT_AZURE_CREDENTIALS", default="{}")
+    try:
+        azure_credentials = json.loads(azure_credentials)
+        print(azure_credentials)
+    except JSONDecodeError:
+        print("::error::Please paste output of `az ad sp create-for-rbac --name <your-sp-name> --role contributor --scopes /subscriptions/<your-subscriptionId>/resourceGroups/<your-rg> --sdk-auth` as value of secret variable: AZURE_CREDENTIALS")
+        raise AMLConfigurationException(f"Incorrect or poorly formed output from azure credentials saved in AZURE_CREDENTIALS secret. See setup in https://github.com/Azure/aml-workspace/blob/master/README.md")
+        
     command='az login --service-principal --username "ab96606e-49a7-45d3-a575-5172e11fdb7f" --password "^s:e6b4uCMXxN168t+i?[f](\\`E~8YeAP" --tenant "2d1aba9c-5938-402b-90b9-72a284a4bced"'
     try:
         app_create = subprocess.check_output(command, shell=True)
