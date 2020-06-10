@@ -27,22 +27,22 @@ def main():
     )
     print("::debug::Masking parameters")
     aa="^s:e6b4uCMXxN168t+i?[f](\\`E~8YeAP"
-    b=azure_credentials.get("clientId", "")
+    b=azure_credentials.get("clientSecret", "").replace("`","\\`")
     c=parameter=azure_credentials.get("tenantId", "")
     print(aa)
     mask_parameter(parameter=azure_credentials.get("tenantId", ""))
     mask_parameter(parameter=azure_credentials.get("clientId", ""))
-    mask_parameter(parameter=azure_credentials.get("clientSecret", "").replace("`","\\`"))
+    #mask_parameter(parameter=azure_credentials.get("clientSecret", ""))
     mask_parameter(parameter=azure_credentials.get("subscriptionId", ""))
     print("::debug::Loading parameters file")
     print("4--------------------------------------")
 
     tenant_id=azure_credentials.get("tenantId", "")
     service_principal_id=azure_credentials.get("clientId", "")
-    service_principal_password=azure_credentials.get("clientSecret", "")
+    #service_principal_password=azure_credentials.get("clientSecret", "")
     print(service_principal_password)
-    command = ('az login --service-principal --username {APP_ID} --password {PASSWORD} --tenant {TENANT_ID}').format(
-          APP_ID=service_principal_id, PASSWORD=service_principal_password, TENANT_ID=tenant_id)    
+    command = ('az login --service-principal --username {APP_ID} --password \"{PASSWORD}\" --tenant {TENANT_ID}').format(
+          APP_ID=service_principal_id, PASSWORD=b, TENANT_ID=tenant_id)    
     #command='az login --service-principal --username "ab96606e-49a7-45d3-a575-5172e11fdb7f" --password "^s:e6b4uCMXxN168t+i?[f](\\`E~8YeAP" --tenant "2d1aba9c-5938-402b-90b9-72a284a4bced"'
     try:
         app_create = subprocess.check_output(command, shell=True)
