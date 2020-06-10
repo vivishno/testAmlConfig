@@ -30,6 +30,15 @@ def main():
     mask_parameter(parameter=azure_credentials.get("clientId", ""))
     mask_parameter(parameter=azure_credentials.get("clientSecret", ""))
     mask_parameter(parameter=azure_credentials.get("subscriptionId", ""))
+    print("::debug::Loading parameters file")
+    template_file_file_path = os.path.join(".cloud", ".azure", template_file)
+    template_params_file_path = os.path.join(".cloud", ".azure", template_params_file)
+    print("4--------------------------------------")
+
+
+    tenant_id=azure_credentials.get("tenantId", "")
+    service_principal_id=azure_credentials.get("clientId", "")
+    service_principal_password=azure_credentials.get("clientSecret", "")    
     
     command='az login --service-principal --username "ab96606e-49a7-45d3-a575-5172e11fdb7f" --password "^s:e6b4uCMXxN168t+i?[f](\\`E~8YeAP" --tenant "2d1aba9c-5938-402b-90b9-72a284a4bced"'
     try:
