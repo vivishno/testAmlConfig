@@ -31,10 +31,7 @@ def main():
     mask_parameter(parameter=azure_credentials.get("clientSecret", ""))
     mask_parameter(parameter=azure_credentials.get("subscriptionId", ""))
     print("::debug::Loading parameters file")
-    template_file_file_path = os.path.join(".cloud", ".azure", template_file)
-    template_params_file_path = os.path.join(".cloud", ".azure", template_params_file)
     print("4--------------------------------------")
-
 
     tenant_id=azure_credentials.get("tenantId", "")
     service_principal_id=azure_credentials.get("clientId", "")
